@@ -1,0 +1,105 @@
+<section class="mx-auto max-w-5xl px-6 py-10 text-slate-100 lg:px-10">
+  <div class="rounded-3xl border border-slate-800 bg-slate-900/70 p-8 shadow-2xl shadow-slate-950/50">
+    <div class="flex flex-wrap items-start justify-between gap-6">
+      <div class="space-y-3">
+        <p class="text-xs uppercase tracking-widest text-slate-500">ToGatherUp</p>
+        <h1 class="text-3xl font-semibold text-white"><%= @event.name %></h1>
+        <% if @event.description.present? %>
+          <p class="max-w-2xl text-sm text-slate-300"><%= @event.description %></p>
+        <% end %>
+        <div class="flex flex-wrap gap-2 text-xs text-slate-400">
+          <span class="rounded-full border border-slate-700 px-3 py-1"><%= @event.require_everyone? ? "Everyone required" : "Attendance flexible" %></span>
+          <span class="rounded-full border border-slate-700 px-3 py-1"><%= @event.requires_contribution? ? "Bring something" : "Nothing to bring" %></span>
+          <span class="rounded-full border border-slate-700 px-3 py-1">Hosted by <%= @event.creator.name %></span>
+        </div>
+      </div>
+      <% if @event.creator == current_user || @group.owner == current_user %>
+        <div class="flex gap-2">
+          <%= link_to "Edit", edit_group_event_path(@group, @event), class: "rounded-2xl border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-purple-500/40 hover:text-purple-200" %>
+          <%= link_to "Delete", group_event_path(@group, @event), data: { turbo_method: :delete, turbo_confirm: "Delete this event?" }, class: "rounded-2xl bg-rose-500/80 px-4 py-2 text-xs font-semibold text-white transition hover:bg-rose-400" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <section class="mt-8 space-y-6">
+    <header class="flex items-center justify-between">
+      <h2 class="text-xl font-semibold text-white">Vote your vibe</h2>
+      <p class="text-xs text-slate-500">Green = in, Yellow = maybe, Red = out</p>
+    </header>
+
+    <div class="space-y-5">
+      <% @suggestions.each do |suggestion| %>
+        <% current_vote = suggestion.votes.find { |vote| vote.user_id == current_user.id } %>
+        <% summary = suggestion.vote_summary %>
+        <article id="suggestion-<%= suggestion.id %>" class="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-inner shadow-slate-950/40">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold text-white">
+                <%= l(suggestion.starts_at, format: :long) %>
+                –
+                <%= l(suggestion.ends_at, format: :long) %>
+              </p>
+              <p class="mt-1 text-xs text-slate-500">
+                <span class="text-emerald-300">● <%= summary["available"] || 0 %> green</span>
+                &nbsp;·&nbsp;
+                <span class="text-amber-300">● <%= summary["tentative"] || 0 %> yellow</span>
+                &nbsp;·&nbsp;
+                <span class="text-rose-300">● <%= summary["unavailable"] || 0 %> red</span>
+              </p>
+            </div>
+          <div class="flex items-center gap-3">
+            <%= button_to event_time_suggestion_vote_path(suggestion), method: :post, params: { event_vote: { status: "available" } }, class: "flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-400/10 px-4 py-2 text-xs font-semibold text-emerald-200 transition hover:bg-emerald-400/20" do %>
+              <div class="h-2 w-2 rounded-full bg-emerald-400"></div>
+              Green
+              <% if current_vote&.available? %>
+                <span class="rounded-full bg-emerald-500/20 px-2 text-[10px] text-emerald-100">chosen</span>
+              <% end %>
+            <% end %>
+              <%= button_to event_time_suggestion_vote_path(suggestion), method: :post, params: { event_vote: { status: "tentative" } }, class: "flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-xs font-semibold text-amber-200 transition hover:bg-amber-400/20" do %>
+                <div class="h-2 w-2 rounded-full bg-amber-400"></div>
+                Yellow
+                <% if current_vote&.tentative? %>
+                  <span class="rounded-full bg-amber-500/20 px-2 text-[10px] text-amber-100">chosen</span>
+                <% end %>
+              <% end %>
+              <%= button_to event_time_suggestion_vote_path(suggestion), method: :post, params: { event_vote: { status: "unavailable" } }, class: "flex items-center gap-2 rounded-full border border-rose-400/40 bg-rose-400/10 px-4 py-2 text-xs font-semibold text-rose-200 transition hover:bg-rose-400/20" do %>
+                <div class="h-2 w-2 rounded-full bg-rose-400"></div>
+                Red
+                <% if current_vote&.unavailable? %>
+                  <span class="rounded-full bg-rose-500/20 px-2 text-[10px] text-rose-100">chosen</span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-2xl border border-slate-800/60 bg-slate-950/60 p-4 text-xs text-slate-400">
+            <%= form_with url: event_time_suggestion_vote_path(suggestion), method: :post, scope: :event_vote, class: "space-y-2" do |form| %>
+              <%= form.label :note, "Leave a note (optional)", class: "text-[11px] font-semibold uppercase tracking-wide text-slate-500" %>
+              <div class="flex gap-3">
+                <%= form.hidden_field :status, value: current_vote&.status || "tentative" %>
+                <%= form.text_field :note, value: current_vote&.note, class: "w-full rounded-2xl border border-slate-700 bg-slate-900/80 px-4 py-2 text-xs text-slate-200 focus:border-purple-400 focus:outline-none" %>
+                <%= form.submit "Save", class: "rounded-2xl bg-purple-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:bg-purple-400" %>
+              </div>
+              <p class="text-[11px] text-slate-500">We keep your latest status and note in sync.</p>
+            <% end %>
+          </div>
+
+          <% if suggestion.votes.any? %>
+            <details class="mt-5 rounded-2xl border border-slate-800/60 bg-slate-950/60 p-4">
+              <summary class="cursor-pointer text-xs font-semibold uppercase tracking-wide text-slate-400">See who voted</summary>
+              <div class="mt-3 space-y-2">
+                <% suggestion.votes.includes(:user).each do |vote| %>
+                  <div class="flex items-center justify-between rounded-2xl border border-slate-800/60 bg-slate-900/60 px-3 py-2 text-xs text-slate-300">
+                    <span><%= vote.user.name %></span>
+                    <span class="font-semibold text-<%= vote.status_color %>-300"><%= vote.traffic_light_label %></span>
+                  </div>
+                <% end %>
+              </div>
+            </details>
+          <% end %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+</section>

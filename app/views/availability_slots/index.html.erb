@@ -1,0 +1,45 @@
+<section class="mx-auto max-w-4xl px-6 py-10 text-slate-100 lg:px-10">
+  <div class="rounded-3xl border border-slate-800 bg-slate-900/70 p-8 shadow-xl shadow-slate-950/50">
+    <header class="flex flex-col gap-2">
+      <h1 class="text-3xl font-semibold text-white">Craft your availability</h1>
+      <p class="text-xs text-slate-500">Share the windows where you thrive so your crew can schedule with ease.</p>
+    </header>
+
+    <div class="mt-8 grid gap-8 lg:grid-cols-2">
+      <div class="space-y-4">
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Current slots</h2>
+        <% if @availability_slots.any? %>
+          <div class="space-y-3">
+            <% @availability_slots.each do |slot| %>
+              <div class="flex items-center justify-between rounded-2xl border border-slate-800/60 bg-slate-950/60 px-4 py-3">
+                <div>
+                  <p class="text-sm font-semibold text-white"><%= slot.day_of_week.titleize %></p>
+                  <p class="text-xs text-slate-400">
+                    <%= slot.starts_at.strftime("%H:%M") %> – <%= slot.ends_at.strftime("%H:%M") %>
+                  </p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <%= link_to heroicon("pencil-square", variant: :outline, options: { class: "h-5 w-5 text-slate-500 hover:text-purple-300" }), edit_availability_slot_path(slot) %>
+                  <%= button_to heroicon("trash", variant: :outline, options: { class: "h-5 w-5 text-rose-300" }), availability_slot_path(slot), method: :delete, form: { data: { turbo_confirm: "Remove this slot?" } }, class: "text-rose-300" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="rounded-2xl border border-dashed border-slate-800/60 bg-slate-950/50 p-5 text-sm text-slate-500">No availability yet. Add a window with the form.</p>
+        <% end %>
+      </div>
+
+      <div class="rounded-2xl border border-slate-800/60 bg-slate-950/50 p-6">
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Add a new slot</h2>
+        <div class="mt-4">
+          <%= render partial: "form", locals: {
+            availability_slot: @availability_slot,
+            url: availability_slots_path,
+            submit_label: "Save slot"
+          } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

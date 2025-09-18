@@ -1,0 +1,18 @@
+<% flash.each do |type, message| %>
+  <% next if message.blank? %>
+  <% tone =
+      case type.to_sym
+      when :notice
+        { border: "border-emerald-400/50", bg: "bg-emerald-500/10", text: "text-emerald-100", icon: "check-circle" }
+      when :alert, :error
+        { border: "border-rose-400/50", bg: "bg-rose-500/10", text: "text-rose-100", icon: "exclamation-triangle" }
+      else
+        { border: "border-slate-500/40", bg: "bg-slate-800/70", text: "text-slate-100", icon: "sparkles" }
+      end %>
+  <div class="glass-card mt-4 flex items-center gap-3 border-2 <%= tone[:border] %> <%= tone[:bg] %> <%= tone[:text] %>">
+    <div class="rounded-2xl bg-slate-950/80 p-3">
+      <%= heroicon tone[:icon], variant: :outline, options: { class: "h-5 w-5" } %>
+    </div>
+    <p class="text-sm"><%= message %></p>
+  </div>
+<% end %>

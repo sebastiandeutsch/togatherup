@@ -1,0 +1,51 @@
+<div class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="relative isolate overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_#a855f7,_transparent_55%),_radial-gradient(circle_at_bottom,_#2dd4bf,_transparent_45%)] opacity-60"></div>
+    <header class="mx-auto flex max-w-7xl flex-col gap-16 px-6 pb-24 pt-24 text-center lg:px-12">
+      <div class="mx-auto max-w-3xl space-y-8">
+        <p class="inline-flex items-center gap-2 rounded-full bg-slate-900/60 px-4 py-2 text-sm font-medium text-slate-300 shadow-lg ring-1 ring-purple-500/40">
+          <%= heroicon "sparkles", variant: :solid, options: { class: "h-4 w-4 text-purple-300" } %>
+          Meet where vibes align
+        </p>
+        <h1 class="text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+          Plan gatherings effortlessly with a traffic-light flow.
+        </h1>
+        <p class="text-lg leading-relaxed text-slate-300">
+          ToGatherUp helps friend groups stay close. Suggest meetups, align on timing with a colorful vote, and capture what matters in one elegant workspace built for dark-mode lovers.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <%= link_to "Create your squad", new_registration_path, class: "rounded-full bg-purple-500 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:bg-purple-400 hover:shadow-purple-400/40" %>
+          <%= link_to "Sign in", new_session_path, class: "rounded-full border border-slate-700 px-6 py-3 text-base font-semibold text-slate-200 transition hover:border-slate-500 hover:text-white" %>
+        </div>
+      </div>
+      <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-slate-800/60 bg-slate-900/60 shadow-xl shadow-slate-950/60">
+        <img src="https://images.unsplash.com/photo-1455734729978-db1ae4f687fc?auto=format&fit=crop&w=1600&q=80" alt="Friends gathering" class="h-full w-full object-cover opacity-70" />
+      </div>
+    </header>
+  </div>
+  <section class="mx-auto max-w-6xl px-6 pb-24 lg:px-12">
+    <div class="grid gap-8 lg:grid-cols-3">
+      <div class="rounded-3xl border border-purple-500/20 bg-slate-900/60 p-8 shadow-lg shadow-purple-500/10">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/20">
+          <%= heroicon "users", variant: :outline, options: { class: "h-6 w-6 text-purple-300" } %>
+        </div>
+        <h3 class="mt-6 text-xl font-semibold text-white">Seamless group spaces</h3>
+        <p class="mt-3 text-sm leading-relaxed text-slate-300">Create dedicated circles, invite friends with a shareable link, and keep everyone aligned with modular cards highlighting what matters now.</p>
+      </div>
+      <div class="rounded-3xl border border-slate-800 bg-slate-900/60 p-8 shadow-lg shadow-cyan-500/10">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/20">
+          <%= heroicon "calendar", variant: :outline, options: { class: "h-6 w-6 text-cyan-300" } %>
+        </div>
+        <h3 class="mt-6 text-xl font-semibold text-white">Smart availability</h3>
+        <p class="mt-3 text-sm leading-relaxed text-slate-300">Drop in your go-to times once and reuse them. ToGatherUp suggests windows that actually work by blending every member’s rhythm.</p>
+      </div>
+      <div class="rounded-3xl border border-slate-800 bg-slate-900/60 p-8 shadow-lg shadow-purple-500/10">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/20">
+          <%= heroicon "signal", variant: :outline, options: { class: "h-6 w-6 text-purple-200" } %>
+        </div>
+        <h3 class="mt-6 text-xl font-semibold text-white">Traffic-light clarity</h3>
+        <p class="mt-3 text-sm leading-relaxed text-slate-300">Vote green, yellow, or red on each possibility. Everyone sees the vibe, and you’ll know instantly who’s in, who’s unsure, and who can’t make it.</p>
+      </div>
+    </div>
+  </section>
+</div>

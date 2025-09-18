@@ -1,0 +1,38 @@
+<section class="mx-auto max-w-lg px-6 py-16 text-slate-100 lg:px-10">
+  <div class="space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-8 text-center shadow-2xl shadow-slate-950/60">
+    <div class="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-purple-200">
+      <%= heroicon "sparkles", variant: :outline, options: { class: "h-4 w-4" } %>
+      You are invited
+    </div>
+    <div class="space-y-3">
+      <h1 class="text-3xl font-semibold text-white">Join <%= @invitation.group.name %></h1>
+      <p class="text-sm text-slate-400">Brought together by <%= @invitation.sender.name %>. Sign in and accept to enter their ToGatherUp circle.</p>
+    </div>
+
+    <% if @invitation.expired? %>
+      <div class="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-100">
+        This invitation expired. Ask the group owner for a fresh link.
+      </div>
+    <% elsif @invitation.accepted_at? %>
+      <div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-100">
+        Someone already used this link. Try signing in to see if you're part of the group.
+      </div>
+    <% else %>
+      <% if signed_in? %>
+        <%= link_to "Accept and join", accept_group_invitation_path(@invitation.token), data: { turbo_method: :post }, class: "block w-full rounded-2xl bg-purple-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:bg-purple-400" %>
+      <% else %>
+        <div class="space-y-3">
+          <p class="text-sm text-slate-400">Sign in or create an account to hop in.</p>
+          <div class="grid gap-3">
+            <%= link_to "Sign in", new_session_path, class: "w-full rounded-2xl border border-slate-700 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:border-purple-500/40 hover:text-purple-200" %>
+            <%= link_to "Create account", new_registration_path, class: "w-full rounded-2xl bg-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:bg-purple-400" %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div class="rounded-2xl border border-slate-800/60 bg-slate-950/60 p-4 text-xs text-slate-500">
+      Keep this link cozy — anyone with it can request to join.
+    </div>
+  </div>
+</section>

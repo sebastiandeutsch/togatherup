@@ -1,0 +1,27 @@
+<section class="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-8 px-6 py-12 text-slate-100">
+  <div class="space-y-3 text-center">
+    <h1 class="text-3xl font-semibold text-white">Welcome back</h1>
+    <p class="text-sm text-slate-400">Pick up where your last meetup left off.</p>
+  </div>
+
+  <div class="rounded-3xl border border-slate-800/80 bg-slate-900/80 p-8 shadow-2xl shadow-slate-950/70">
+    <%= form_with url: session_path, scope: :session, class: "space-y-6" do |form| %>
+      <div class="space-y-2">
+        <%= form.label :email, class: "text-sm font-medium text-slate-200" %>
+        <%= form.email_field :email, autofocus: true, class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white shadow-inner shadow-slate-950/60 focus:border-purple-400 focus:outline-none" %>
+      </div>
+      <div class="space-y-2">
+        <%= form.label :password, class: "text-sm font-medium text-slate-200" %>
+        <%= form.password_field :password, class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white shadow-inner shadow-slate-950/60 focus:border-purple-400 focus:outline-none" %>
+      </div>
+      <div class="pt-2">
+        <%= form.submit "Sign in", class: "w-full rounded-2xl bg-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:bg-purple-400" %>
+      </div>
+    <% end %>
+
+    <p class="mt-6 text-center text-xs text-slate-500">
+      New here?
+      <%= link_to "Create your account", new_registration_path, class: "font-semibold text-cyan-300 hover:text-cyan-200" %>
+    </p>
+  </div>
+</section>

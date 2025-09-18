@@ -1,0 +1,37 @@
+<%= form_with model: availability_slot, url:, class: "space-y-4" do |form| %>
+  <% if availability_slot.errors.any? %>
+    <div class="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-200">
+      <p class="font-semibold">Please fix <%= pluralize(availability_slot.errors.count, "issue") %>:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5">
+        <% availability_slot.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="space-y-2">
+      <%= form.label :day_of_week, class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+      <%= form.select :day_of_week,
+        AvailabilitySlot::DAYS_OF_WEEK.map { |label, value| [label.to_s.titleize, value] },
+        {},
+        class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white focus:border-cyan-400 focus:outline-none" %>
+    </div>
+    <div class="space-y-2">
+      <%= form.label :starts_at, "From", class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+      <%= form.time_field :starts_at, class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white focus:border-cyan-400 focus:outline-none" %>
+    </div>
+    <div class="space-y-2">
+      <%= form.label :ends_at, "Until", class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+      <%= form.time_field :ends_at, class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white focus:border-cyan-400 focus:outline-none" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-3 pt-2">
+    <% if defined?(cancel_path) && cancel_path.present? %>
+      <%= link_to "Cancel", cancel_path, class: "rounded-2xl border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-slate-500" %>
+    <% end %>
+    <%= form.submit submit_label, class: "rounded-2xl bg-cyan-500 px-5 py-2 text-xs font-semibold uppercase tracking-wide text-slate-950 shadow-lg shadow-cyan-500/30 transition hover:bg-cyan-400" %>
+  </div>
+<% end %>

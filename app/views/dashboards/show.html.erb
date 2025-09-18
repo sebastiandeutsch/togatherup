@@ -1,0 +1,85 @@
+<section class="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10 text-slate-100 lg:px-10">
+  <header class="flex flex-col gap-2">
+    <h1 class="text-3xl font-semibold text-white">Hey <%= current_user.name %>, ready to gather?</h1>
+    <p class="text-sm text-slate-400">Check your groups, upcoming ToGatherUps, and where your friends stand.</p>
+  </header>
+
+  <div class="grid gap-8 lg:grid-cols-12">
+    <div class="lg:col-span-7 space-y-6">
+      <div class="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-inner shadow-slate-950/40">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-white">Upcoming meetups</h2>
+          <%= link_to "View all groups", groups_path, class: "text-sm font-semibold text-purple-300 hover:text-purple-200" %>
+        </div>
+        <div class="mt-5 space-y-4">
+          <% if @upcoming_events.present? %>
+            <% @upcoming_events.each do |event| %>
+              <article class="rounded-2xl border border-slate-800/60 bg-slate-900/80 p-5 transition hover:border-purple-500/40">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p class="text-xs uppercase tracking-widest text-slate-500">ToGatherUp</p>
+                    <h3 class="mt-1 text-lg font-semibold text-white"><%= link_to event.name, group_event_path(event.group, event), class: "hover:text-purple-200" %></h3>
+                  </div>
+                  <span class="inline-flex items-center gap-2 rounded-full bg-purple-500/20 px-3 py-1 text-xs font-medium text-purple-200">
+                    <%= heroicon "users", variant: :solid, options: { class: "h-4 w-4" } %>
+                    <%= event.group.name %>
+                  </span>
+                </div>
+                <p class="mt-3 text-sm text-slate-400"><%= truncate(event.description, length: 120) %></p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <% event.time_suggestions.each do |suggestion| %>
+                    <div class="flex items-center gap-2 rounded-full border border-slate-800/60 bg-slate-950/60 px-3 py-1 text-xs text-slate-300">
+                      <%= heroicon "clock", variant: :outline, options: { class: "h-4 w-4 text-cyan-200" } %>
+                      <span><%= l(suggestion.starts_at, format: :long) %></span>
+                    </div>
+                  <% end %>
+                </div>
+              </article>
+            <% end %>
+          <% else %>
+            <p class="rounded-2xl border border-dashed border-slate-800/60 bg-slate-900/50 p-6 text-sm text-slate-500">
+              No gatherings yet. Create a new one from your <%= link_to "groups", groups_path, class: "text-purple-300 hover:text-purple-200" %>.
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <aside class="lg:col-span-5 space-y-6">
+      <div class="rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-white">Your groups</h2>
+          <%= link_to "Create group", new_group_path, class: "text-sm font-semibold text-cyan-300 hover:text-cyan-200" %>
+        </div>
+        <div class="mt-5 space-y-4">
+          <% if @groups.any? %>
+            <% @groups.each do |group| %>
+              <div class="flex items-center justify-between rounded-2xl border border-slate-800/60 bg-slate-950/60 px-4 py-3">
+                <div>
+                  <h3 class="text-sm font-semibold text-white"><%= link_to group.name, group_path(group), class: "hover:text-purple-200" %></h3>
+                  <p class="text-xs text-slate-500"><%= pluralize(group.members.count, "member") %></p>
+                </div>
+                <%= link_to heroicon("arrow-right", variant: :solid, options: { class: "h-5 w-5 text-slate-500 hover:text-purple-200" }), group_path(group) %>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="rounded-xl border border-dashed border-slate-800/60 bg-slate-900/50 p-5 text-sm text-slate-500">Create your first group to get started.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+        <h2 class="text-xl font-semibold text-white">Quick actions</h2>
+        <div class="mt-5 grid gap-3">
+          <%= link_to availability_slots_path, class: "flex items-center justify-between rounded-2xl border border-slate-800/60 bg-slate-950/60 px-4 py-3 text-sm font-medium text-slate-200 transition hover:border-cyan-500/40 hover:text-white" do %>
+            <span>Adjust availability</span>
+            <%= heroicon "bolt", variant: :outline, options: { class: "h-5 w-5 text-cyan-300" } %>
+          <% end %>
+          <%= link_to profile_path, class: "flex items-center justify-between rounded-2xl border border-slate-800/60 bg-slate-950/60 px-4 py-3 text-sm font-medium text-slate-200 transition hover:border-purple-500/40 hover:text-white" do %>
+            <span>Polish your profile</span>
+            <%= heroicon "sparkles", variant: :outline, options: { class: "h-5 w-5 text-purple-300" } %>
+          <% end %>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>

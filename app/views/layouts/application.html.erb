@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "ToGatherUp" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              midnight: {
+                950: "#020617"
+              }
+            },
+            boxShadow: {
+              glow: "0 0 60px -15px rgba(168, 85, 247, 0.55)",
+              cyan: "0 0 45px -12px rgba(45, 212, 191, 0.4)",
+              slate: "0 25px 60px rgba(2, 6, 23, 0.6)"
+            },
+            borderRadius: {
+              '3xl': '2rem',
+              pill: '999px'
+            }
+          }
+        }
+      };
+    </script>
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-slate-950 text-slate-100 antialiased">
+    <div class="relative flex min-h-screen flex-col overflow-hidden">
+      <div class="pointer-events-none absolute inset-0 -z-10">
+        <div class="absolute left-1/2 top-[-18rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-purple-500/40 blur-3xl"></div>
+        <div class="absolute right-[-12rem] top-40 h-[28rem] w-[28rem] rounded-full bg-cyan-500/30 blur-[120px]"></div>
+        <div class="absolute inset-x-0 bottom-[-20rem] h-[32rem] bg-gradient-to-t from-purple-500/20 via-transparent to-transparent"></div>
+      </div>
+
+      <header class="sticky top-0 z-40 border-b border-white/5 bg-slate-950/80 backdrop-blur">
+        <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-10">
+          <%= link_to root_path, class: "flex items-center gap-3 rounded-full bg-white/5 px-4 py-2 text-white shadow-inner shadow-purple-500/20 transition hover:bg-white/10" do %>
+            <div class="flex h-10 w-10 items-center justify-center rounded-3xl bg-gradient-to-br from-purple-500 via-fuchsia-500 to-cyan-400 shadow-glow">
+              <span class="text-lg font-semibold">TG</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm font-semibold uppercase tracking-[0.2em] text-purple-200">ToGatherUp</span>
+              <span class="text-[11px] font-medium uppercase tracking-[0.4em] text-slate-400">Gather intentionally</span>
+            </div>
+          <% end %>
+
+          <nav class="hidden items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-300 md:flex">
+            <% if signed_in? %>
+              <%= nav_link_to "Dashboard", dashboard_path %>
+              <%= nav_link_to "Groups", groups_path %>
+              <%= nav_link_to "Availability", availability_slots_path %>
+            <% else %>
+              <%= nav_link_to "Features", root_path %>
+              <%= nav_link_to "Stories", root_path %>
+              <%= nav_link_to "Pricing", root_path %>
+            <% end %>
+          </nav>
+
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-slate-300">
+            <% if signed_in? %>
+              <%= link_to new_group_path, class: "hidden rounded-pill bg-gradient-to-r from-purple-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-white shadow-glow transition hover:shadow-cyan md:inline-flex" do %>
+                New Group
+              <% end %>
+              <%= link_to profile_path, class: "flex items-center gap-3 rounded-pill border border-white/10 bg-white/5 px-3 py-2 shadow-inner shadow-purple-500/10 transition hover:border-purple-400/50 hover:bg-purple-500/10" do %>
+                <% if current_user&.avatar&.attached? %>
+                  <%= image_tag current_user.avatar_variant(size: 64), class: "h-8 w-8 rounded-2xl object-cover" %>
+                <% else %>
+                  <div class="flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 text-purple-200">
+                    <%= heroicon "user", variant: :solid, options: { class: "h-4 w-4" } %>
+                  </div>
+                <% end %>
+                <span class="hidden text-[11px] tracking-[0.2em] text-white md:inline"><%= current_user.name.split.first %></span>
+              <% end %>
+              <%= link_to "Sign out", session_path, data: { turbo_method: :delete }, class: "rounded-pill border border-rose-400/60 px-4 py-2 text-[11px] tracking-[0.25em] text-rose-200 transition hover:bg-rose-500/10" %>
+            <% else %>
+              <%= link_to "Sign in", new_session_path, class: "rounded-pill border border-white/10 px-4 py-2 text-[11px] tracking-[0.3em] text-white transition hover:border-purple-400 hover:bg-purple-500/10" %>
+              <%= link_to "Create account", new_registration_path, class: "rounded-pill bg-gradient-to-r from-purple-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-[11px] tracking-[0.25em] text-white shadow-glow transition hover:shadow-cyan" %>
+            <% end %>
+          </div>
+        </div>
+      </header>
+
+      <main class="relative z-10 flex-1">
+        <div class="mx-auto w-full max-w-7xl px-6 py-8 lg:px-10">
+          <div class="mb-6"><%= render "shared/flash" %></div>
+        </div>
+        <div class="relative z-10 pb-16">
+          <%= yield %>
+        </div>
+      </main>
+
+      <footer class="border-t border-white/5 bg-slate-950/90">
+        <div class="mx-auto flex w-full max-w-7xl flex-col gap-3 px-6 py-6 text-xs text-slate-500 lg:flex-row lg:items-center lg:justify-between lg:px-10">
+          <p class="tracking-[0.3em] uppercase">© <%= Time.current.year %> ToGatherUp</p>
+          <div class="flex flex-wrap items-center gap-4">
+            <span class="text-slate-400">Crafted with gradients, micro-shadows, and intentional focus.</span>
+            <a href="https://unsplash.com" class="text-slate-300 transition hover:text-purple-200" target="_blank" rel="noopener">Imagery via Unsplash</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

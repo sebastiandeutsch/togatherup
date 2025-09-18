@@ -1,0 +1,60 @@
+<%= form_with model: [@group, event], url:, class: "space-y-6" do |form| %>
+  <% if event.errors.any? %>
+    <div class="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-200">
+      <p class="font-semibold">Please resolve <%= pluralize(event.errors.count, "issue") %>:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5">
+        <% event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="space-y-2">
+      <%= form.label :name, class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+      <%= form.text_field :name, class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white focus:border-purple-400 focus:outline-none" %>
+    </div>
+    <div class="space-y-2">
+      <%= form.label :require_everyone, class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+      <div class="flex items-center gap-2 rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-slate-200">
+        <%= form.check_box :require_everyone, class: "h-4 w-4 rounded border-slate-700 bg-slate-900 text-purple-500" %>
+        Everyone must attend
+      </div>
+    </div>
+    <div class="sm:col-span-2 space-y-2">
+      <%= form.label :description, class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+      <%= form.text_area :description, rows: 4, class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white focus:border-purple-400 focus:outline-none" %>
+    </div>
+    <div class="space-y-2">
+      <%= form.label :requires_contribution, class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+      <div class="flex items-center gap-2 rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-slate-200">
+        <%= form.check_box :requires_contribution, class: "h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500" %>
+        Bring something optional
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Time suggestions</h3>
+    <%= form.fields_for :time_suggestions do |time_form| %>
+      <div class="grid items-end gap-3 rounded-2xl border border-slate-800/60 bg-slate-950/60 p-4 sm:grid-cols-2">
+        <div class="space-y-2">
+          <%= time_form.label :starts_at, "Starts", class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+          <%= time_form.datetime_local_field :starts_at, class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-2 text-sm text-white focus:border-cyan-400 focus:outline-none" %>
+        </div>
+        <div class="space-y-2">
+          <%= time_form.label :ends_at, "Ends", class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+          <%= time_form.datetime_local_field :ends_at, class: "w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-2 text-sm text-white focus:border-cyan-400 focus:outline-none" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-end gap-3">
+    <% if defined?(cancel_path) && cancel_path.present? %>
+      <%= link_to "Cancel", cancel_path, class: "rounded-2xl border border-slate-700 px-5 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:border-slate-500" %>
+    <% end %>
+    <%= form.submit submit_label, class: "rounded-2xl bg-purple-500 px-6 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-lg shadow-purple-500/30 transition hover:bg-purple-400" %>
+  </div>
+<% end %>

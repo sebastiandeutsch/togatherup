@@ -1,0 +1,31 @@
+<section class="mx-auto max-w-5xl px-6 py-10 text-slate-100 lg:px-10">
+  <header class="flex flex-col gap-2">
+    <h1 class="text-3xl font-semibold text-white"><%= @group.name %> • ToGatherUps</h1>
+    <p class="text-xs text-slate-500">All shared plans in one moody timeline.</p>
+  </header>
+
+  <div class="mt-8 space-y-5">
+    <% if @events.any? %>
+      <% @events.each do |event| %>
+        <article class="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-inner shadow-slate-950/40">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-xl font-semibold text-white"><%= link_to event.name, group_event_path(@group, event), class: "hover:text-purple-200" %></h2>
+              <p class="text-xs text-slate-500">By <%= event.creator.name %> • <%= l(event.created_at, format: :long) %></p>
+            </div>
+            <%= link_to "View details", group_event_path(@group, event), class: "rounded-2xl border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-purple-500/40 hover:text-purple-200" %>
+          </div>
+          <% if event.description.present? %>
+            <p class="mt-4 text-sm text-slate-300"><%= event.description %></p>
+          <% end %>
+          <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-500">
+            <span class="rounded-full border border-slate-700 px-3 py-1"><%= event.require_everyone? ? "Everyone required" : "Attendance flexible" %></span>
+            <span class="rounded-full border border-slate-700 px-3 py-1"><%= event.requires_contribution? ? "Bring something" : "No contributions" %></span>
+          </div>
+        </article>
+      <% end %>
+    <% else %>
+      <p class="rounded-3xl border border-dashed border-slate-800/60 bg-slate-900/60 p-6 text-sm text-slate-500">No ToGatherUps yet. <%= link_to "Create one", new_group_event_path(@group), class: "text-purple-300 hover:text-purple-200" %>.</p>
+    <% end %>
+  </div>
+</section>

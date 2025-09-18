@@ -1,0 +1,58 @@
+<section class="mx-auto max-w-4xl px-6 py-10 text-slate-100 lg:px-10">
+  <header class="flex flex-col gap-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-8 shadow-xl shadow-slate-950/50 lg:flex-row lg:items-center lg:justify-between">
+    <div class="flex items-center gap-6">
+      <div class="relative h-24 w-24 overflow-hidden rounded-3xl border border-purple-500/30 bg-slate-950/80">
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar_variant(size: 192), class: "h-full w-full object-cover" %>
+        <% else %>
+          <div class="flex h-full w-full items-center justify-center text-purple-300">
+          <%= heroicon "user-circle", variant: :outline, options: { class: "h-12 w-12" } %>
+          </div>
+        <% end %>
+      </div>
+      <div class="space-y-2">
+        <h1 class="text-3xl font-semibold text-white"><%= @user.name %></h1>
+        <p class="text-sm text-slate-400"><%= @user.email %></p>
+        <% if @user.bio.present? %>
+          <p class="text-sm text-slate-300"><%= @user.bio %></p>
+        <% else %>
+          <p class="text-xs text-slate-500">Add a short vibe check so friends know what you're into lately.</p>
+        <% end %>
+      </div>
+    </div>
+    <div class="flex gap-3">
+      <%= link_to "Edit profile", edit_profile_path, class: "rounded-2xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-purple-500/40 hover:text-white" %>
+      <%= button_to "Sign out", session_path, method: :delete, class: "rounded-2xl bg-rose-500/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-400" %>
+    </div>
+  </header>
+
+  <section class="mt-10 space-y-4">
+    <div class="flex items-center gap-3">
+      <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/20">
+        <%= heroicon "clock", variant: :outline, options: { class: "h-5 w-5 text-cyan-300" } %>
+      </div>
+      <div>
+        <h2 class="text-xl font-semibold text-white">Preferred times</h2>
+        <p class="text-xs text-slate-500">Set repeating windows so friends instantly know when to count you in.</p>
+      </div>
+      <div class="ml-auto">
+        <%= link_to "Manage", availability_slots_path, class: "text-sm font-semibold text-purple-300 hover:text-purple-200" %>
+      </div>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <% if @availability_slots.any? %>
+        <% @availability_slots.each do |slot| %>
+          <div class="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+            <p class="text-sm font-semibold text-white"><%= slot.day_of_week.titleize %></p>
+            <p class="mt-2 text-sm text-slate-300">
+              <%= slot.starts_at.strftime("%H:%M") %> – <%= slot.ends_at.strftime("%H:%M") %>
+            </p>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="rounded-2xl border border-dashed border-slate-800/60 bg-slate-900/60 p-6 text-sm text-slate-500">No availability set yet. Add your go-to windows so planning stays effortless.</p>
+      <% end %>
+    </div>
+  </section>
+</section>
